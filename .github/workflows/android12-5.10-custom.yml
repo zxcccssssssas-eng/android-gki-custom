@@ -1,7 +1,6 @@
 name: Android12-5.10-Custom
 
 on:
-  push:
   schedule:
     - cron: "0 0 * * *"
   workflow_dispatch:
@@ -34,10 +33,10 @@ on:
       kernelsu_branch:
         required: false
         type: string
-        default: latest
+        default: dev
         description: >
           Branch or version of KernelSU to use,
-          for example: main, latest, v1.0.3
+          for example: stable, dev, v1.0.3
       kernelsu_next:
         required: true
         type: boolean
@@ -47,10 +46,10 @@ on:
       kernelsu_next_branch:
         required: false
         type: string
-        default: latest
+        default: dev
         description: >
           Branch or version of KernelSU-Next to use,
-          for example: main, latest, v1.0.3
+          for example: stable, dev, v1.0.3
 
 jobs:
   KernelSU:
@@ -88,15 +87,15 @@ jobs:
         if: ${{ github.event.inputs.kernelsu == 'true' || github.event_name == 'schedule' }}
         run: |
           cd android-kernel/common
-          if [[ "${{ github.event.inputs.kernelsu_branch || 'latest' }}" == "main" ]]; then
-            echo "Using KernelSU main"
-            curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s main
-          elif [[ "${{ github.event.inputs.kernelsu_branch || 'latest' }}" == "latest" ]]; then
-            echo "Using KernelSU latest"
+          if [[ "${{ github.event.inputs.kernelsu_branch }}" == "stable" ]]; then
+            echo "Using KernelSU stable branch."
             curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
+          elif [[ "${{ github.event.inputs.kernelsu_branch }}" == "dev" ]]; then
+            echo "Using KernelSU dev branch."
+            curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s main
           else
-            echo "Using KernelSU ${{ github.event.inputs.kernelsu_branch }}"
-            curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s ${{ github.event.inputs.kernelsu_branch || 'latest' }}
+            echo "Using KernelSU specific branch: ${{ github.event.inputs.kernelsu_branch }}"
+            curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s ${{ github.event.inputs.kernelsu_branch || 'main' }}
           fi
 
       - name: Commit changes
@@ -171,15 +170,15 @@ jobs:
         if: ${{ github.event.inputs.kernelsu_next == 'true' || github.event_name == 'schedule' }}
         run: |
           cd android-kernel/common
-          if [[ "${{ github.event.inputs.kernelsu_next_branch || 'latest' }}" == "main" ]]; then
-            echo "Using KernelSU-Next stable branch"
+          if [[ "${{ github.event.inputs.kernelsu_next_branch }}" == "stable" ]]; then
+            echo "Using KernelSU-Next stable branch."
             curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next/kernel/setup.sh" | bash -
-          elif [[ "${{ github.event.inputs.kernelsu_next_branch || 'latest' }}" == "latest" ]]; then
-            echo "Using KernelSU-Next dev branch"
+          elif [[ "${{ github.event.inputs.kernelsu_next_branch }}" == "dev" ]]; then
+            echo "Using KernelSU-Next dev branch."
             curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next/kernel/setup.sh" | bash -s next
           else
-            echo "Using KernelSU-Next ${{ github.event.inputs.kernelsu_next_branch }}"
-            curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next/kernel/setup.sh" | bash -s ${{ github.event.inputs.kernelsu_next_branch || 'latest' }}
+            echo "Using KernelSU-Next specific branch: ${{ github.event.inputs.kernelsu_next_branch }}"
+            curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next/kernel/setup.sh" | bash -s ${{ github.event.inputs.kernelsu_next_branch || 'next' }}
           fi
 
       - name: Commit changes
