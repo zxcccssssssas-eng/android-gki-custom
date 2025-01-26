@@ -8,9 +8,10 @@ on:
       os_patch_level:
         required: false
         type: string
+        default: 2024-11
         description: >
           Patch level of common kernel manifest,
-          for example: 2024-08
+          for example: 2024-11
       os_version:
         required: true
         type: string
@@ -117,9 +118,9 @@ jobs:
       - name: Build boot.img
         run: |
           cd android-kernel/tools/mkbootimg
-          wget -q https://dl.google.com/android/gki/gki-certified-boot-android12-5.10-2024-08_r4.zip -O gki-boot.zip
+          wget -q https://dl.google.com/android/gki/gki-certified-boot-android12-5.10-2024-11_r4.zip -O gki-boot.zip
           unzip -q gki-boot.zip
-          PATCH_LEVEL=${{ github.event.inputs.os_patch_level || '2024-08' }}
+          PATCH_LEVEL=${{ github.event.inputs.os_patch_level || '2024-11' }}
           ./unpack_bootimg.py --boot_img boot*.img
           ./mkbootimg.py --header_version 4 --os_version ${{ github.event.inputs.os_version || '12.0.0' }} --os_patch_level ${PATCH_LEVEL} --kernel $GITHUB_WORKSPACE/android-kernel/out/android12-5.10/dist/Image --ramdisk out/ramdisk --output boot.img
 
@@ -200,9 +201,9 @@ jobs:
       - name: Build boot.img
         run: |
           cd android-kernel/tools/mkbootimg
-          wget -q https://dl.google.com/android/gki/gki-certified-boot-android12-5.10-2024-08_r4.zip -O gki-boot.zip
+          wget -q https://dl.google.com/android/gki/gki-certified-boot-android12-5.10-2024-11_r6.zip -O gki-boot.zip
           unzip -q gki-boot.zip
-          PATCH_LEVEL=${{ github.event.inputs.os_patch_level || '2024-08' }}
+          PATCH_LEVEL=${{ github.event.inputs.os_patch_level || '2024-11' }}
           ./unpack_bootimg.py --boot_img boot*.img
           ./mkbootimg.py --header_version 4 --os_version ${{ github.event.inputs.os_version || '12.0.0' }} --os_patch_level ${PATCH_LEVEL} --kernel $GITHUB_WORKSPACE/android-kernel/out/android12-5.10/dist/Image --ramdisk out/ramdisk --output boot.img
 
