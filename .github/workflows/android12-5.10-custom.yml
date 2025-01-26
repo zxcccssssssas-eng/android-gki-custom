@@ -8,7 +8,6 @@ on:
       os_patch_level:
         required: false
         type: string
-        default: 2024-11
         description: >
           Patch level of common kernel manifest,
           for example: 2024-11
