@@ -208,10 +208,10 @@ jobs:
 
       - name: Prepare artifacts
         run: |
-          mkdir -p artifacts
-          mkdir bbr
-          tar -czvf archive_name.tar.gz android-kernel/
-          cp ./archive_name.tar.gz bbr/
+          #mkdir -p artifacts
+          #mkdir bbr
+          #tar -czvf archive_name.tar.gz android-kernel/
+          #cp ./archive_name.tar.gz bbr/
           cp android-kernel/out/android12-5.10/dist/Image artifacts/
           cp android-kernel/tools/mkbootimg/boot.img artifacts/
 
@@ -220,8 +220,8 @@ jobs:
         with:
           name: kernelsu-next-android12-5.10${{ github.event.inputs.os_patch_level && github.event.inputs.os_patch_level != '' && '-' || '' }}${{ github.event.inputs.os_patch_level || '' }}
           path: artifacts
-      - name: bbr.ko
+      - name: android_kernel
         uses: actions/upload-artifact@main
         with:
           name: "archive_name.tar.gz"
-          path: bbr
+          path: android-kernel
